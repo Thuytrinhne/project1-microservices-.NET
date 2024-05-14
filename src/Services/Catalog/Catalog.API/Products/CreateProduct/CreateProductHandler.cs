@@ -3,7 +3,7 @@ namespace Catalog.API.Products.CreateProduct
     public record CreateProductCommand (CreateProductDto Product)
         :ICommand<CreateProductResult>;
     public record CreateProductResult(Guid ProductId);
-    internal class CreateProductHandler (IDocumentSession session)
+    internal class CreateProductCommandHandler (IDocumentSession session)
         : ICommandHandler<CreateProductCommand, CreateProductResult>
     {
         public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
