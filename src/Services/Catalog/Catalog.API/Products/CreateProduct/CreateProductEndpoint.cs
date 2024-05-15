@@ -1,7 +1,7 @@
 namespace Catalog.API.Products.CreateProduct
 {
     public record CreateProductRequest (CreateProductDto Product);
-    public record CreateProductResponse(Guid Id);
+    public record CreateProductResponse(Guid ProductId);
 
     public class CreateProductEndpoint : ICarterModule
     {
@@ -9,10 +9,11 @@ namespace Catalog.API.Products.CreateProduct
         {
             app.MapPost("/products", async (CreateProductRequest request, ISender sender) =>
             {
+
                 var command = request.Adapt<CreateProductCommand>();
                 var result = await sender.Send(command);
                 var response = result.Adapt<CreateProductResponse>();
-                return Results.Created($"/products/{response.Id}", response);
+                return Results.Created($"/products/{response.ProductId}", response);
             })
                 .WithName("CreateProduct")
                 .Produces<CreateProductResponse>(StatusCodes.Status201Created)
