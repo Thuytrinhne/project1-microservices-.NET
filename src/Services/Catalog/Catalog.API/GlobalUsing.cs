@@ -8,3 +8,6 @@ global using Marten;
 global using Catalog.API.Products.GetProducts;
 global using Marten.Linq.QueryHandlers;
 global using Catalog.API.Exceptions;
+global using FluentValidation;
+global using BuildingBlocks.Behaviors;
+global using BuildingBlocks.Exceptions;
