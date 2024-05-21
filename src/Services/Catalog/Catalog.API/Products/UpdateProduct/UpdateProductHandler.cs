@@ -26,13 +26,12 @@ namespace Catalog.API.Products.UpdateProduct
             RuleFor(x => x.Product.Price).GreaterThanOrEqualTo(0).WithMessage("Price is greater than or Equal to 0");
         }
     }
-    internal class UpdateProducCommandHandler(IDocumentSession session, ILogger<GetProductsHandler> logger)
+    internal class UpdateProducCommandHandler(IDocumentSession session)
         : ICommandHandler<UpdateProductCommand, UpdateProductResult>
     {
       
         public async Task<UpdateProductResult> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
         {
-            logger.LogInformation("UpdateProducCommandHandler.Handle called with {@command}", command);
             // load sản phẩm đó ra
             // thay doi san pham
             // update vao db

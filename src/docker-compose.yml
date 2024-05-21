@@ -3,5 +3,20 @@ version: '3.4'
 services:
    catalogdb:
       image: postgres
+      networks:
+        - mynetworks
+   catalog.api:
+      image: ${DOCKER_REGISTRY-}catalogapi
+      build:
+        context: .
+        dockerfile: Services/Catalog/Catalog.API/Dockerfile
+      networks:
+        - mynetworks
+
+
 volumes:
   postgres_catalog:
+
+networks:
+  mynetworks:
+    driver: bridge
