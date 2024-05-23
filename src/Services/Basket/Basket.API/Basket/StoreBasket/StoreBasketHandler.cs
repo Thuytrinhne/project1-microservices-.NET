@@ -13,13 +13,13 @@ namespace Basket.API.Basket.StoreBasket
             RuleFor(x => x.Cart.UserName).NotEmpty().WithMessage("UserName is required");
         }
     }
-    internal class StoreBasketCommandHandler
+    internal class StoreBasketCommandHandler (IBasketRepository repository)
         : ICommandHandler<StoreBasketCommand, StoreBasketResult>
     {
         public async  Task<StoreBasketResult> Handle(StoreBasketCommand command, CancellationToken cancellationToken)
         {
-            ShoppingCart cart = command.Cart;
-            return new StoreBasketResult("userName");
+            var newBasket = await repository.StoreBasket(command.Cart, cancellationToken);
+            return new StoreBasketResult(newBasket.UserName);
 
         }
     }
