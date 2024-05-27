@@ -22,7 +22,7 @@ namespace Basket.API.Data
             // -> if cart doesn't exist into database, Marten will insert it
             // if cart is already existing, Marten will be updated
 
-            session.Store (basket);
+             session.Store (basket);
             await session.SaveChangesAsync (cancellationToken);
             return basket;
         }
