@@ -30,10 +30,19 @@ services:
           context: .
           dockerfile: Services/Basket/Basket.API/Dockerfile
 
+   discount.grpc:
+     image: ${DOCKER_REGISTRY-}discountgrpc
+     build:
+       context: .
+       dockerfile: Services/Discount/Discount.Grpc/Dockerfile
+     networks:
+        - mynetworks
+
 volumes:
   postgres_catalog:
   postgres_basket:
 networks:
   mynetworks:
     driver: bridge
+
 
