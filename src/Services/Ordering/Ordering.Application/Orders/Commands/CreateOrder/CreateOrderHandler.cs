@@ -10,9 +10,11 @@ public class CreateOrderHandler(IAppDbContext dbContext)
 
         var order = CreateNewOrder(command.Order);
 
-        dbContext.Orders.Add(order);
-        await dbContext.SaveChangesAsync(cancellationToken);
-
+        await  dbContext.Orders.AddAsync(order);
+     
+            await dbContext.SaveChangesAsync(cancellationToken);
+       
+        
         return new CreateOrderResult(order.Id.Value);
     }
 

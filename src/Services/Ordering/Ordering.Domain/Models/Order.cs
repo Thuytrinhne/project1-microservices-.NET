@@ -55,5 +55,8 @@ namespace Ordering.Domain.Models
                 _orderItems.Remove(orderItem);
             }
         }
+
+
+      
     }
 }

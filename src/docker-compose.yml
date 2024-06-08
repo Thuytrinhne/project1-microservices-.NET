@@ -1,6 +1,14 @@
 version: '3.4'
 
 services:
+   gateway.api:
+     image: ${DOCKER_REGISTRY-}gatewayapi
+     build:
+       context: .
+       dockerfile: Gateway/Gateway.API/Dockerfile
+     networks:
+        - mynetworks
+
    catalogdb:
       image: postgres
       networks:
@@ -13,6 +21,19 @@ services:
 
    distributedcache:
       image: redis
+      networks:
+        - mynetworks
+
+   orderdb:
+      image: mcr.microsoft.com/mssql/server
+      networks:
+        - mynetworks
+
+   messagebroker:
+      image: rabbitmq:management
+      networks:
+        - mynetworks
+
 
    catalog.api:
       image: ${DOCKER_REGISTRY-}catalogapi
@@ -29,6 +50,8 @@ services:
       build:
           context: .
           dockerfile: Services/Basket/Basket.API/Dockerfile
+      networks:
+        - mynetworks
 
    discount.grpc:
      image: ${DOCKER_REGISTRY-}discountgrpc
@@ -38,11 +61,24 @@ services:
      networks:
         - mynetworks
 
+   ordering.api:
+     image: ${DOCKER_REGISTRY-}orderingapi
+     build:
+       context: .
+       dockerfile: Services/Ordering/Ordering.API/Dockerfile
+     networks:
+        - mynetworks
+
+ 
+
 volumes:
   postgres_catalog:
   postgres_basket:
 networks:
   mynetworks:
+    name: mynetworks
     driver: bridge
+
+
 
 

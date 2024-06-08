@@ -1,7 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 // add services to the container for dependency injection
 builder.Services
-    .AddApplicationServices()
+    .AddApplicationServices(builder.Configuration)
     .AddInfrastructureServices(builder.Configuration)
     .AddApiServices(builder.Configuration); //  use extention method for service
 

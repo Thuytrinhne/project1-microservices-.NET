@@ -16,7 +16,7 @@ namespace Ordering.API.Endpoints
         {
             app.MapGet("/orders/", async ([AsParameters]PaginationRequest request, ISender sender) =>
             {
-                var result = sender.Send(new GetOrdersQuery(request));
+                var result = await  sender.Send(new GetOrdersQuery(request));
                 var response = result.Adapt<GetOrdersResponse>();
                 return Results.Ok(response);
             })

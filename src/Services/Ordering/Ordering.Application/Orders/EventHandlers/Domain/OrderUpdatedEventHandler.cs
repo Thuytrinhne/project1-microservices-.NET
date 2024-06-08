@@ -1,9 +1,9 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace Ordering.Application.Orders.EventHandlers
+namespace Ordering.Application.Orders.EventHandlers.Domain
 {
-    public class OrderUpdatedEventHandler (ILogger<OrderUpdatedEventHandler> logger)
+    public class OrderUpdatedEventHandler(ILogger<OrderUpdatedEventHandler> logger)
         : INotificationHandler<OrderUpdatedEvent>
     {
         public Task Handle(OrderUpdatedEvent notification, CancellationToken cancellationToken)
