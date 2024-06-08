@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>c99ebd3b-de5a-41d7-9e50-35b0d9ac23a7</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.Identity.MongoDbCore" Version="3.1.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Users\Account\CreateAddress\" />
+    <Folder Include="Users\Account\DeleteAddress\" />
+    <Folder Include="Users\Account\UpdateAddress\" />
+    <Folder Include="Users\Account\StoreImage\" />
+    <Folder Include="Users\Account\UpdateAccount\" />
+    <Folder Include="Users\Account\ResetPassword\" />
+    <Folder Include="Users\Auth\Login\" />
+    <Folder Include="Users\Auth\ForgotPassword\" />
+    <Folder Include="Users\Auth\SendOTP\" />
+    <Folder Include="Users\Auth\Register\" />
+  </ItemGroup>
+
+</Project>

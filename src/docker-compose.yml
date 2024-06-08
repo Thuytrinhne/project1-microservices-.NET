@@ -29,6 +29,11 @@ services:
       networks:
         - mynetworks
 
+   mongodb:
+      image: mongo
+      networks:
+        - mynetworks
+
    messagebroker:
       image: rabbitmq:management
       networks:
@@ -69,11 +74,12 @@ services:
      networks:
         - mynetworks
 
- 
+   
 
 volumes:
   postgres_catalog:
   postgres_basket:
+  mongo_user:
 networks:
   mynetworks:
     name: mynetworks

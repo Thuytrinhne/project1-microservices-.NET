@@ -56,6 +56,15 @@ services:
     ports:
       - "1433:1433"
 
+  mongodb:
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_user:/data/db
+
+
+
   messagebroker:
      container_name: messagebroker
      hostname: ecommerce-mq
