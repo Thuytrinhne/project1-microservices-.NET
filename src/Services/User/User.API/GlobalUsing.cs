@@ -1,8 +1,14 @@
 global using User.API.Settings;
-
-namespace User.API
-{
-    public class GlobalUsing
-    {
-    }
-}
+global using  BuildingBlocks.CQRS;
+global using User.API.Dtos;
+global using Microsoft.AspNetCore.Identity;
+global using User.API.Models;
+global using Carter;
+global using BuildingBlocks.Exceptions;
+global using FluentValidation;
+global using User.API.Enums;
+global  using MediatR;
+global using BuildingBlocks.Behaviors;
+global using Microsoft.Extensions.Configuration;
+global using User.API.Service;
+global using User.API.Service.IService;
