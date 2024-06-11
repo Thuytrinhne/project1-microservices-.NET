@@ -25,7 +25,7 @@ namespace User.API.Service
             _userManager = userManager;
         }
 
-        public async  Task<string> CreateJwtToken(ApplicationUser applicationUser)
+        public async  Task<string> CreateJwtToken(ApplicationUser applicationUser, Double expire)
         {
             var roles = await _userManager.GetRolesAsync(applicationUser);
 
@@ -46,17 +46,12 @@ namespace User.API.Service
                 Audience = _jwtConfig.Audience,
                 Issuer = _jwtConfig.Issuer,
                 Subject = new ClaimsIdentity(claimList),
-                Expires = DateTime.UtcNow.AddDays(_jwtConfig.DurationInMinutes), 
+                Expires = DateTime.UtcNow.AddMinutes(expire), 
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
-
-      
-
-      
-
     }
 }

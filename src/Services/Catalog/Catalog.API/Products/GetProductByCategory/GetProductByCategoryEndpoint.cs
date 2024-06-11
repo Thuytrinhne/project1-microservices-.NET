@@ -8,7 +8,7 @@ namespace Catalog.API.Products.GetProductByCategory
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/products/category/{category}", async (string category, ISender sender) =>
+            app.MapGet("/products/category/{category}", async (Guid  category, ISender sender) =>
             {
                 var result = await  sender.Send(new GetProductsByCategoryQuery(category));
                 var response =  result.Adapt<GetProductsByCategoryResponse>();

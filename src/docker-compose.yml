@@ -76,6 +76,13 @@ services:
 
    
 
+   user.api:
+     image: ${DOCKER_REGISTRY-}userapi
+     build:
+       context: .
+       dockerfile: Services/User/User.API/Dockerfile
+     networks:
+        - mynetworks
 volumes:
   postgres_catalog:
   postgres_basket:
@@ -84,6 +91,7 @@ networks:
   mynetworks:
     name: mynetworks
     driver: bridge
+
 
 
 

@@ -5,7 +5,7 @@ namespace User.API.Models
     public class User
     {
         [Required]
-        public string Username { get; set; }
+        public string Username { get; set; } 
 
         [Required]
         [EmailAddress(ErrorMessage = "Invalid Email")]
@@ -14,8 +14,13 @@ namespace User.API.Models
         [Required]
         public string Password { get; set; }
 
-        public string ImageUrl { get; set; } = default!;
-        public string PublicId { get; set; } = default!;
+        public UserImage UserImage { get; set; }
+        public int Gender { get; set; } = default!;
+
+        public DateTime DOB { get; set; } = default!;
+        public List<string> RoleNames { get; set; } = default!;
+        public List<UserAddress> UserAddresses { get; set; } = default!;
 
     }
+  
 }

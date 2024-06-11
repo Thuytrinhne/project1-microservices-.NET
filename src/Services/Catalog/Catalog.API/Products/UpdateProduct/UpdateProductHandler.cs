@@ -1,32 +1,31 @@
 
+using BuildingBlocks.PhotoCloudinary;
 using Catalog.API.Products.CreateProduct;
 
 namespace Catalog.API.Products.UpdateProduct
 {
     // UpdateProductQuery : đóng gói dữ liệu cần thiết cho yêu cầu đó
     // easy readable and maintenance
-    public record UpdateProductCommand (UpdateProductDto Product) 
+    public record UpdateProductCommand(
+     Guid Id, 
+     string ? Title,
+    Guid ? CategoryId,
+    string ? Description,
+    decimal ? Price,
+    string ? Tags) 
         :ICommand<UpdateProductResult>;
-    public record UpdateProductResult (Product Product);
+    public record UpdateProductResult (ProductDto Product);
 
     public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
     {
         public UpdateProductCommandValidator()
         {
-            RuleFor(x => x.Product.Id).NotEmpty().WithMessage("Product Id is required");
+            RuleFor(x => x.Id).NotEmpty().WithMessage("Product Id is required");
 
-            RuleFor(x => x.Product.Name)
-                .NotEmpty().WithMessage("Name is required")
-                .Length(2, 150).WithMessage("Name must be between 2 and 150 characters");
-
-            RuleFor(x => x.Product.Category).NotEmpty().WithMessage("Category is required");
-
-            RuleFor(x => x.Product.ImageFile).NotEmpty().WithMessage("ImageFile is required");
-
-            RuleFor(x => x.Product.Price).GreaterThanOrEqualTo(0).WithMessage("Price is greater than or Equal to 0");
+       
         }
     }
-    internal class UpdateProducCommandHandler(IDocumentSession session)
+    internal class UpdateProducCommandHandler(IDocumentSession session, ICloudinaryService _cloudinaryService)
         : ICommandHandler<UpdateProductCommand, UpdateProductResult>
     {
       
@@ -36,20 +35,40 @@ namespace Catalog.API.Products.UpdateProduct
             // thay doi san pham
             // update vao db
            
-            var productFromDb = await  session.LoadAsync<Product>(command.Product.Id, cancellationToken);
+            var productFromDb = await  session.LoadAsync<Product>(command.Id, cancellationToken);
             if (productFromDb is null)
             {
-                throw new ProductNotFoundException(command.Product.Id);
+                throw new ProductNotFoundException(command.Id);
             }
-            productFromDb.Name = command.Product.Name;
-            productFromDb.ImageFile = command.Product.ImageFile;
-            productFromDb.Category = command.Product.Category;
-            productFromDb.Description = command.Product.Description;
-            productFromDb.Price = command.Product.Price;
+            if (command.CategoryId != Guid.Empty)
+            {
+                var category = await session.LoadAsync<Category>(command.CategoryId.Value, cancellationToken);
+
+                if (category is null) throw new CategoryNotFoundException(command.CategoryId.Value);
+                productFromDb.Category = category;
+            }
+            if (!string.IsNullOrEmpty(  command.Title))
+                productFromDb.Title = command.Title;
+       
+            if (!string.IsNullOrEmpty(command.Description))
+            {
+                productFromDb.Description = command.Description;
+
+            }
+            if (!string.IsNullOrEmpty(command.Tags))
+            {
+                productFromDb.Description = command.Tags;
+
+            }
+            if (command.Price >=0)
+            {
+                productFromDb.Price = command.Price.Value;
+
+            }
             
             session.Update(productFromDb);
             await session.SaveChangesAsync();
-            return new UpdateProductResult (productFromDb);
+            return new UpdateProductResult (productFromDb.Adapt<ProductDto>());
         }
     }
 }

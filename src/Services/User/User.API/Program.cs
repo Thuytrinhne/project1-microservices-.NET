@@ -1,11 +1,4 @@
 
-using BuildingBlocks.Behaviors;
-using BuildingBlocks.Exceptions.Handler;
-using Microsoft.Extensions.Configuration;
-using User.API.Models;
-using User.API.Service;
-using User.API.Service.IService;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Application services
@@ -20,14 +13,18 @@ builder.Services.AddMediatR(config =>
 });
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
-builder.Services.AddSingleton<EmailVerificationService>();
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
+builder.Services.AddSingleton<EmailVerificationService>();
+builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+    options.TokenLifespan = TimeSpan.FromMinutes(Authorization.ResetPasswordExpiredTimeInMinutes));
 
 
 //Configuration from AppSettings
 builder.Services.Configure<JWTConfig>(builder.Configuration.GetSection("JWT"));
 builder.Services.Configure<MailConfig>(builder.Configuration.GetSection("Mail"));
 builder.Services.Configure<MongoDbConfig>(builder.Configuration.GetSection("MongoDbConfig"));
+builder.Services.Configure<CloudinaryConfig>(builder.Configuration.GetSection("CloudinaryConfig"));
 
 
 // Database services
@@ -36,15 +33,14 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
         .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>
         (
             mongoDbSettings.ConnectionString, mongoDbSettings.Name
-        );
+        ).AddDefaultTokenProviders();
 
 // Cross-cutting services
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline
+  // Configure the HTTP request pipeline
 app.MapCarter();
 app.UseExceptionHandler(opts => { });
 

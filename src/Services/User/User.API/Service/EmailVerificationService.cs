@@ -24,8 +24,10 @@ namespace User.API.Service
             }
 
     
-            public async Task<EmailVerification?> GetAsync(string id) =>
-                await _collection.Find(x => x.Id == id).FirstOrDefaultAsync();
+            public async Task<EmailVerification?> GetByEmailAsync(string email) =>
+                await _collection.Find(x => x.Email == email)
+            .SortByDescending(x => x.ExpiryTime)
+            .FirstOrDefaultAsync();
 
             public async Task CreateAsync(EmailVerification emailVerification) =>
                 await _collection.InsertOneAsync(emailVerification);

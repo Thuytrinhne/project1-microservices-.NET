@@ -1,4 +1,6 @@
 
+using Basket.API.Exception;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using System.Xml.Linq;
 
@@ -22,21 +24,30 @@ namespace User.API.Users.Auth.Register
 
             RuleFor(x => x.User.Password).NotEmpty().WithMessage("Password is required");
 
+            RuleFor(x => x.User.OTP)
+                .NotEmpty().WithMessage("OTP is required")
+                .Length(6).WithMessage("OTP must be exactly 6 characters long");
+
         }
     }
 
     public class RegisterCommandHandler
         (UserManager<ApplicationUser> _userManager,
-        RoleManager<ApplicationRole> _roleManager)
+        RoleManager<ApplicationRole> _roleManager,
+        EmailVerificationService _emailVerification)
         : ICommandHandler<RegisterCommand, RegisterResult>
     {
         public async  Task<RegisterResult> Handle(RegisterCommand command, CancellationToken cancellationToken)
         {
-            ApplicationUser appUser = new ApplicationUser
-            {
-                UserName = command.User.Name,
-                Email = command.User.Email
-            };
+            // check OTP
+            if (await  checValidOTP(command.User.Email, command.User.OTP)==false)
+                return new RegisterResult(false);
+
+
+
+            var appUser = command.User.Adapt<ApplicationUser>();
+            appUser.UserName = command.User.Email;
+            appUser.RoleNames = new List<string> { Authorization.DefaultRole.ToString() };
 
             IdentityResult result = await _userManager.CreateAsync(appUser, command.User.Password);
             if (result.Succeeded)
@@ -53,6 +64,7 @@ namespace User.API.Users.Auth.Register
                 }
 
                 await _userManager.AddToRoleAsync(appUser, Authorization.DefaultRole.ToString());
+               
                 return new RegisterResult(true);
             }
             else
@@ -66,6 +78,16 @@ namespace User.API.Users.Auth.Register
                 // Throw a single exception with all error messages
                 throw new Exception(string.Join("; ", errorMessages));
             }
+        }
+
+        private async  Task<bool>  checValidOTP(string email, string otp)
+        {
+            var obj= await _emailVerification.GetByEmailAsync(email);
+            if (obj is null)
+                return false;
+            if(obj.ExpiryTime >= DateTime.UtcNow && otp == obj.OTP) return true;
+            return false;
+
         }
     }
 }

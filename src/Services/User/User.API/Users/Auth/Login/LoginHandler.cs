@@ -4,6 +4,7 @@ using FluentValidation;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
 using System.Net.WebSockets;
+using User.API.Mapper;
 using User.API.Models;
 using User.API.Service;
 using User.API.Users.Auth.Register;
@@ -40,12 +41,14 @@ namespace User.API.Users.Auth.Login
                 if (await _userManager.CheckPasswordAsync(appUser, command.User.Password))
                 {
                     // generate token
-                    var loginResponseDto = appUser.Adapt<LoginResponseDto>();
-                    loginResponseDto.Token = await _jwtToken.CreateJwtToken(appUser);
-                    // get role
-                    var roles = await _userManager.GetRolesAsync(appUser);
-                    loginResponseDto.Roles = roles.ToList();
-                    return new LoginResult(loginResponseDto);
+                    var userDto = appUser.ToUserDto();
+                    LoginResponseDto loginResponse = new LoginResponseDto();
+                    loginResponse.User = userDto;
+                    loginResponse.Token = await _jwtToken.CreateJwtToken(appUser, Authorization.AccessTokenExpiredTimeInMinutes);
+                    //// get role
+                    //var roles = await _userManager.GetRolesAsync(appUser);
+                    //loginResponseDto.Roles = roles.ToList();
+                    return new LoginResult(loginResponse);
                 }
             }
             throw new UserNotFoundException("Login Failed: Invalid Email or Password");

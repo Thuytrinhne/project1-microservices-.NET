@@ -12,18 +12,13 @@
   <ItemGroup>
     <PackageReference Include="AspNetCore.Identity.MongoDbCore" Version="3.1.2" />
     <PackageReference Include="Carter" Version="8.2.1" />
+    <PackageReference Include="CloudinaryDotNet" Version="1.26.2" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Users\Account\CreateAddress\" />
-    <Folder Include="Users\Account\DeleteAddress\" />
-    <Folder Include="Users\Account\UpdateAddress\" />
-    <Folder Include="Users\Account\StoreImage\" />
-    <Folder Include="Users\Account\UpdateAccount\" />
     <Folder Include="Users\Account\ResetPassword\" />
-    <Folder Include="Users\Auth\ForgotPassword\" />
   </ItemGroup>
 
   <ItemGroup>

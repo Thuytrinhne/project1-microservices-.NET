@@ -1,6 +1,15 @@
+using BuildingBlocks.PhotoCloudinary;
+using Weasel.Core;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the dependency container
+
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+// Config from app settings
+builder.Services.Configure<CloudinaryConfig>(builder.Configuration.GetSection("CloudinaryConfig"));
+
+
 var assembly = typeof(Program).Assembly;
 
 builder.Services.AddMediatR(config =>
@@ -19,6 +28,8 @@ builder.Services.AddCarter(); // minimal api
 builder.Services.AddMarten(opts =>
 {
     opts.Connection(builder.Configuration.GetConnectionString("DefaultConnectionString")!);
+    opts.AutoCreateSchemaObjects = AutoCreate.All;
+
 }).UseLightweightSessions();
 
 

@@ -10,7 +10,7 @@ namespace User.API.Users.Auth.SendOTP
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("auth/sendOtp", async (SendOTPRequest request, ISender sender) =>
+            app.MapPost("auth/otps", async (SendOTPRequest request, ISender sender) =>
             {
                 var command = request.Adapt<SendOTPCommand>();
                 var result = await  sender.Send(command);

@@ -12,3 +12,7 @@ global using BuildingBlocks.Behaviors;
 global using Microsoft.Extensions.Configuration;
 global using User.API.Service;
 global using User.API.Service.IService;
+global using Basket.API.Exception;
+global using BuildingBlocks.Exceptions.Handler;
+global using BuildingBlocks.PhotoCloudinary;
+global using Authorization = User.API.Enums.Authorization;

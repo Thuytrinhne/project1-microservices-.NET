@@ -1,26 +1,34 @@
 
+using Catalog.API.Products.CreateProduct;
 using Catalog.API.Products.GetProductById;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.API.Products.UpdateProduct
 {
-    public record UpdateProductRequest(UpdateProductDto Product);
-    public record UpdateProductResponse(UpdateProductResponseDto Product);
+    public record UpdateProductRequest(
+      string ? Title ,
+      Guid? CategoryId ,
+      string? Description ,
+      decimal? Price ,
+      string? Tags);
+    public record UpdateProductResponse(ProductDto Product);
 
     public class UpdateProductEndpoint  : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPut("/products", async (UpdateProductRequest request, ISender sender)
+            app.MapPatch("/products/{id}", async ( UpdateProductRequest request,Guid id,  ISender sender)
             =>{
-              
-                    var command = request.Adapt<UpdateProductCommand>();
-                    var result = await sender.Send(command);
-                    var response = result.Adapt<UpdateProductResponse>();
-                    return Results.Ok(response);
-               
-                return Results.Ok();
 
-            })
+                var command = new
+                UpdateProductCommand(id, request.Title, request.CategoryId.Value, request.Description, request.Price.Value, request.Tags);
+                
+               var result = await sender.Send(command);
+                 
+               return Results.Ok(result);
+               
+
+            }) 
               .WithName("UpdateProduct")
              .Produces<UpdateProductResponse>(StatusCodes.Status200OK)
              .ProducesProblem(StatusCodes.Status400BadRequest)
