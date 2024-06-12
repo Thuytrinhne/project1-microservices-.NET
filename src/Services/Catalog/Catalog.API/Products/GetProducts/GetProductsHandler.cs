@@ -5,24 +5,34 @@ using static System.Formats.Asn1.AsnWriter;
 
 namespace Catalog.API.Products.GetProducts
 {
-    public record GetProductQuery (int? PageNumber = 1, int? PageSize = 10)
+    public record GetProductQuery (string? Title,int? PageNumber = 1, int? PageSize = 10)
         : IQuery<GetProductResult>;
     public record GetProductResult (List<GroupedProducts>  ProductDtos);
 
     internal class GetProductsHandler(IDocumentSession session )
         : IQueryHandler<GetProductQuery, GetProductResult>
     {
-        public async Task<GetProductResult> Handle(GetProductQuery query, CancellationToken cancellationToken)
+        public async Task<GetProductResult> Handle( GetProductQuery  query, CancellationToken cancellationToken)
         {
             QueryStatistics stats = null;
-
-            var products = await session.Query<Product>()
-            .Stats(out stats)  
-            .Take(query.PageSize.Value)
-            .Skip(query.PageSize.Value * query.PageNumber.Value)
-            .ToListAsync();
-
-
+            IEnumerable <Product> products;
+            if (string.IsNullOrEmpty(query.Title))
+            {
+                 products = await session.Query<Product>()
+                .Stats(out stats)
+                .Take(query.PageSize.Value)
+                .Skip(query.PageSize.Value * query.PageNumber.Value)
+                .ToListAsync();
+            }
+            else
+            {
+                 products = await session.Query<Product>()
+               .Stats(out stats)
+               .Where(p=>p.Title ==  query.Title)
+               .Take(query.PageSize.Value)
+               .Skip(query.PageSize.Value * query.PageNumber.Value)
+               .ToListAsync();
+            }    
                         var groupedProducts = products.GroupBy(p => p.Title)
                 .Select(g => new GroupedProducts
                 {

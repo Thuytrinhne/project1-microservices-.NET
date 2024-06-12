@@ -1,6 +1,18 @@
 using Gateway.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyHeader();
+
+                      });
+});
+builder.Services.AddHttpClient();
 
 // Add services to the container.
 
@@ -22,6 +34,9 @@ builder.Services.AddAuthorization(options =>
 });
 
 var app = builder.Build();
+
+app.UseCors(MyAllowSpecificOrigins);
+
 
 app.UseAuthentication();
 app.UseAuthorization();

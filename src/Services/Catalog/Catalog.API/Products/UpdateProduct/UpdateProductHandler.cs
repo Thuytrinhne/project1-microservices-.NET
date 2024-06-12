@@ -7,7 +7,8 @@ namespace Catalog.API.Products.UpdateProduct
     // UpdateProductQuery : đóng gói dữ liệu cần thiết cho yêu cầu đó
     // easy readable and maintenance
     public record UpdateProductCommand(
-     Guid Id, 
+     Guid Id,
+     string Name, 
      string ? Title,
     Guid ? CategoryId,
     string ? Description,
@@ -49,7 +50,10 @@ namespace Catalog.API.Products.UpdateProduct
             }
             if (!string.IsNullOrEmpty(  command.Title))
                 productFromDb.Title = command.Title;
-       
+
+            if (!string.IsNullOrEmpty(command.Name))
+                productFromDb.Name = command.Name;
+
             if (!string.IsNullOrEmpty(command.Description))
             {
                 productFromDb.Description = command.Description;

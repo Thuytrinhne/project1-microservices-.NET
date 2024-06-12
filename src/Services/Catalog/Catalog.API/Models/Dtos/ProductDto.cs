@@ -3,6 +3,8 @@ namespace Catalog.API.Models.Dtos
     public class ProductDto
     {
         public Guid Id { get; set; }
+        public string Name { get; set; } = default!;
+
         public string Title { get; set; } = default!;
         Category Category { get; set; }
         public string Description { get; set; } = default!;

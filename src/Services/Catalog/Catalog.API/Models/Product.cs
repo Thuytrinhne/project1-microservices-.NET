@@ -3,6 +3,8 @@ namespace Catalog.API.Models
     public class Product
     {
         public Guid Id { get; set; }
+        public string Name { get; set; } = default!;
+
         public string Title { get; set; } = default!;
         public Category Category { get; set; } = new();
         public string Description { get; set; } = default!;

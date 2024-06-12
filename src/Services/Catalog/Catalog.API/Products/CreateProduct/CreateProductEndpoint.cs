@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Catalog.API.Products.CreateProduct
 {
     public record CreateProductRequest(
+        string Name, 
     string Title,
     Guid CategoryId,
     string Description,
@@ -19,6 +20,7 @@ namespace Catalog.API.Products.CreateProduct
             {
               //  var command = request.Adapt<CreateProductCommand>();
                 var command = new CreateProductCommand(
+                    request.Name,
                     request.Title,
                      request.CategoryId,
                      request.Description,

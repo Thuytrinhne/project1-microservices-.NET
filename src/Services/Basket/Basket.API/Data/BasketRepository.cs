@@ -22,9 +22,40 @@ namespace Basket.API.Data
             // -> if cart doesn't exist into database, Marten will insert it
             // if cart is already existing, Marten will be updated
 
-             session.Store (basket);
-            await session.SaveChangesAsync (cancellationToken);
-            return basket;
+            
+
+            var cartFrmDb = await session.Query<ShoppingCart>()
+                                 .FirstOrDefaultAsync(p => p.UserName == basket.UserName, cancellationToken);
+            if (cartFrmDb is  null) {
+
+                session.Store(basket);
+                return basket;
+            }
+            else
+
+            {
+                foreach (var item in basket.Items)
+                {
+                   var ItemFrmDb= cartFrmDb.Items.FirstOrDefault (p => p.ProductId == item.ProductId);
+                    if (ItemFrmDb is null)
+                    {
+                        cartFrmDb.Items.Add(item);
+                    }
+                    else
+                    {
+                       
+                        ItemFrmDb.Quantity += item.Quantity;
+                    }
+                }
+                session.Update(cartFrmDb);
+                await session.SaveChangesAsync(cancellationToken);
+                return cartFrmDb;
+
+            }
+
+
+
+           
         }
     }
 }

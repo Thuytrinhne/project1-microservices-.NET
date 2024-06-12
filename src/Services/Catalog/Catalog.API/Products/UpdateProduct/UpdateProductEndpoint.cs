@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Catalog.API.Products.UpdateProduct
 {
     public record UpdateProductRequest(
+        string ? Name,
       string ? Title ,
       Guid? CategoryId ,
       string? Description ,
@@ -21,7 +22,7 @@ namespace Catalog.API.Products.UpdateProduct
             =>{
 
                 var command = new
-                UpdateProductCommand(id, request.Title, request.CategoryId.Value, request.Description, request.Price.Value, request.Tags);
+                UpdateProductCommand(id,request.Name,  request.Title, request.CategoryId.Value, request.Description, request.Price.Value, request.Tags);
                 
                var result = await sender.Send(command);
                  

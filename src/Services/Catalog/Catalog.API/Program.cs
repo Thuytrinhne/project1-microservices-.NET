@@ -2,7 +2,18 @@ using BuildingBlocks.PhotoCloudinary;
 using Weasel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyHeader();
+       
+                      });
+});
+builder.Services.AddHttpClient();
 // Add services to the dependency container
 
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
@@ -40,6 +51,9 @@ builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddHealthChecks() // for catalog microservices
     .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnectionString")!);
 var app = builder.Build();
+
+app.UseCors(MyAllowSpecificOrigins);
+
 
 // Configure the HTTP request pipeline to mapping the incoming request 
 app.MapCarter();

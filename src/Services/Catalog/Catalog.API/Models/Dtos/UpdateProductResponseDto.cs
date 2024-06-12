@@ -4,6 +4,8 @@ namespace Catalog.API.Models.Dtos
     {
         public Guid Id { get; set; }
         public string Title { get; set; } = default!;
+        public string Name { get; set; } = default!;
+
         Category Category { get; set; } = new();
         public string Description { get; set; } = default!;
         public string ImageUrl { get; set; } = default!;

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.API.Products.GetProducts
 {
-    public record GetProductsRequest(int ? PageNumber = 1, int ? PageSize = 10);
 
     public record GetProductsResponseByTitle(List<GroupedProducts> ProductDtos);
 
@@ -12,15 +11,15 @@ namespace Catalog.API.Products.GetProducts
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/products", async ([AsParameters]GetProductsRequest request ,  ISender sender) =>
+            app.MapGet("/products", async ( ISender sender, string? Title, int? PageNumber = 0, int? PageSize = 20) =>
             {
-                var query = request.Adapt<GetProductQuery>();
+                var query = new GetProductQuery(Title, PageNumber, PageSize);
                 var result = await sender.Send(query);
                 var response = result.Adapt<GetProductsResponseByTitle>();
                 return Results.Ok(response);
             })
                 .WithName("GetProducts")
-                .Produces<CreateProductResponse>(StatusCodes.Status200OK)
+                .Produces<GetProductsResponseByTitle>(StatusCodes.Status200OK)
                 .ProducesProblem(StatusCodes.Status404NotFound)
                 .WithSummary("GetProducts")
                 .WithDescription("Get Products");

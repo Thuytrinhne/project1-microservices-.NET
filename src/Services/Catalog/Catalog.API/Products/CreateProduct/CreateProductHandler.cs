@@ -4,6 +4,7 @@ using CloudinaryDotNet;
 namespace Catalog.API.Products.CreateProduct;
 
     public record CreateProductCommand(
+    string Name,
     string Title,
     Guid CategoryId,
     string Description,
@@ -17,7 +18,9 @@ namespace Catalog.API.Products.CreateProduct;
     {
         public CreateProductCommandValidator()
         {
-            RuleFor(x => x.Title).NotEmpty().WithMessage("Title is required");
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required");
+
+        RuleFor(x => x.Title).NotEmpty().WithMessage("Title is required");
             RuleFor(x => x.CategoryId).NotEmpty().WithMessage("CategoryId is required");
             RuleFor(x => x.Price).GreaterThanOrEqualTo(0).WithMessage("Price is greater than or Equal to 0");
         }
