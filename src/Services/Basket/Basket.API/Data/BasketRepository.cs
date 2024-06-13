@@ -29,6 +29,8 @@ namespace Basket.API.Data
             if (cartFrmDb is  null) {
 
                 session.Store(basket);
+                await session.SaveChangesAsync(cancellationToken);
+
                 return basket;
             }
             else

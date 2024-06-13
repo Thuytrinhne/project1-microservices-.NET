@@ -8,6 +8,21 @@ using Weasel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                                          .AllowAnyMethod();
+
+                      });
+});
+builder.Services.AddHttpClient();
+
 // Application services
 var assembly = typeof(Program).Assembly;
 builder.Services.AddCarter();
@@ -60,6 +75,8 @@ builder.Services.AddHealthChecks()
 
 
 var app = builder.Build();
+app.UseCors(MyAllowSpecificOrigins);
+
 
 // Configure the HTTP request pipeline
 app.MapCarter();
