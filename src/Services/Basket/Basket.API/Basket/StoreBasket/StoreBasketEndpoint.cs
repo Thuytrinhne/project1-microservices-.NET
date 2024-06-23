@@ -1,5 +1,6 @@
 
 using Basket.API.Basket.GetBasket;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Basket.API.Basket.StoreBasket
 {
@@ -9,7 +10,7 @@ namespace Basket.API.Basket.StoreBasket
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/basket", async (StoreBasketRequest request, ISender sender) =>
+            app.MapPost("/basket", async ([FromBody]StoreBasketRequest request, ISender sender) =>
             {
                 var command = request.Adapt<StoreBasketCommand>();
                 var result = await sender.Send(command);
@@ -18,7 +19,7 @@ namespace Basket.API.Basket.StoreBasket
 
             })
              .WithName("StoreBasket")
-             .Produces<GetBasketResponse>(StatusCodes.Status200OK)
+             .Produces<StoreBasketResponse>(StatusCodes.Status200OK)
              .ProducesProblem(StatusCodes.Status400BadRequest)
              .ProducesProblem(StatusCodes.Status404NotFound)
              .WithSummary("Store Basket")

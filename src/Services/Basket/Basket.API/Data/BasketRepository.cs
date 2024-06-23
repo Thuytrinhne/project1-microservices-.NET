@@ -30,11 +30,9 @@ namespace Basket.API.Data
 
                 session.Store(basket);
                 await session.SaveChangesAsync(cancellationToken);
-
                 return basket;
             }
             else
-
             {
                 foreach (var item in basket.Items)
                 {
@@ -45,7 +43,11 @@ namespace Basket.API.Data
                     }
                     else
                     {
-                       
+                        if (ItemFrmDb.Quantity+ item.Quantity <=0)
+                        {
+                            cartFrmDb.Items.Remove(ItemFrmDb);
+                        }
+                        else
                         ItemFrmDb.Quantity += item.Quantity;
                     }
                 }
@@ -53,11 +55,7 @@ namespace Basket.API.Data
                 await session.SaveChangesAsync(cancellationToken);
                 return cartFrmDb;
 
-            }
-
-
-
-           
+            }        
         }
     }
 }
