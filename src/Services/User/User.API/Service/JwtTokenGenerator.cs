@@ -36,7 +36,7 @@ namespace User.API.Service
             {
                 new Claim(JwtRegisteredClaimNames.Email,applicationUser.Email!),
                 new Claim(JwtRegisteredClaimNames.Sub,applicationUser.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Name,applicationUser.UserName !)
+                new Claim(JwtRegisteredClaimNames.Name,applicationUser.Name !)
             };
 
             claimList.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));

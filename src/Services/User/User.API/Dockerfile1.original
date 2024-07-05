@@ -1,14 +1,11 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
+COPY ./server-certificate.pem /etc/ssl/certs/server-certificate.pem
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
-
-# Copy aspnetapp.pfx and rootCA.cer
-#COPY ./aspnetapp.pfx /https/aspnetapp.pfx
-#COPY ./rootCA.cer /https/rootCA.cer
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -26,18 +23,5 @@ RUN dotnet publish "./User.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /
 
 FROM base AS final
 WORKDIR /app
-#ENV ASPNETCORE_Kestrel__Certificates__Default__Password=hehehe
-#ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-
-# Copy published output from publish stage
 COPY --from=publish /app/publish .
-
-# Install CA certificates and update certificates store
-
-#RUN chmod 777 /https/rootCA.cer
-#RUN apt-get update
-#RUN apt-get install -y --no-install-recommends ca-certificates
-#RUN cp /https/rootCA.cer /usr/local/share/ca-certificates/rootCA.crt
-#RUN ls /usr/local/share/ca-certificates/
-#RUN update-ca-certificates -qq
 ENTRYPOINT ["dotnet", "User.API.dll"]

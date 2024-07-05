@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ordering.Infrastructure.Data;
 
@@ -12,9 +13,11 @@ using Ordering.Infrastructure.Data;
 namespace Ordering.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240705101605_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,24 +75,17 @@ namespace Ordering.Infrastructure.Data.Migrations
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DateOrder")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Note")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("Pending");
+                        .HasDefaultValue("Draft");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -134,6 +130,7 @@ namespace Ordering.Infrastructure.Data.Migrations
                             b1.IsRequired();
 
                             b1.Property<string>("Value")
+                                .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("nvarchar(100)")
                                 .HasColumnName("OrderName");
@@ -144,6 +141,7 @@ namespace Ordering.Infrastructure.Data.Migrations
                             b1.IsRequired();
 
                             b1.Property<string>("CVV")
+                                .IsRequired()
                                 .HasMaxLength(3)
                                 .HasColumnType("nvarchar(3)");
 
@@ -152,14 +150,16 @@ namespace Ordering.Infrastructure.Data.Migrations
                                 .HasColumnType("nvarchar(50)");
 
                             b1.Property<string>("CardNumber")
+                                .IsRequired()
                                 .HasMaxLength(24)
                                 .HasColumnType("nvarchar(24)");
 
                             b1.Property<string>("Expiration")
+                                .IsRequired()
                                 .HasMaxLength(10)
                                 .HasColumnType("nvarchar(10)");
 
-                            b1.Property<int?>("PaymentMethod")
+                            b1.Property<int>("PaymentMethod")
                                 .HasColumnType("int");
                         });
 

@@ -10,7 +10,7 @@ namespace User.API.Users.Account.DeleteAddress
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapDelete("/accounts/{id}/addresses/{addressId}", async (Guid id, Guid addressId, ISender sender) =>
+            app.MapDelete("/users/{id}/addresses/{addressId}", async (Guid id, Guid addressId, ISender sender) =>
             {
                 var command = new DeleteAddressCommand(id, addressId);
                 var result =  await sender.Send(command);

@@ -12,7 +12,7 @@ namespace Ordering.Domain.ValueObjects
         private OrderName (string  value)=>Value = value;
         public static OrderName Of (string value)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(value);
+            //ArgumentException.ThrowIfNullOrWhiteSpace(value);
             return new OrderName(value);
         }
 

@@ -40,7 +40,7 @@ builder.Services.AddMarten(opts =>
 {
     opts.Connection(builder.Configuration.GetConnectionString("DefaultConnectionString")!);
     opts.AutoCreateSchemaObjects = AutoCreate.All;
-    opts.Schema.For<ShoppingCart>().Identity(x => x.UserName);
+    opts.Schema.For<ShoppingCart>().Identity(x => x.UserId);
 }).UseLightweightSessions();
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 builder.Services.Decorate<IBasketRepository, CachedBasketRepository>();

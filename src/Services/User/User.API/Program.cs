@@ -1,6 +1,19 @@
 
 var builder = WebApplication.CreateBuilder(args);
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+
+                      });
+});
+builder.Services.AddHttpClient();
 // Application services
 var assembly = typeof(Program).Assembly;
 builder.Services.AddCarter();
@@ -40,7 +53,8 @@ builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 
 var app = builder.Build();
-  // Configure the HTTP request pipeline
+app.UseCors(MyAllowSpecificOrigins);
+// Configure the HTTP request pipeline
 app.MapCarter();
 app.UseExceptionHandler(opts => { });
 

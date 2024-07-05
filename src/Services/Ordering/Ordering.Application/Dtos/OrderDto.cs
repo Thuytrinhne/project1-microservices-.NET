@@ -8,6 +8,9 @@ namespace Ordering.Application.Dtos
             AddressDto BillingAddress,
             PaymentDto Payment,
             OrderStatus Status,
-            List<OrderItemDto> OrderItems);
+            List<OrderItemDto> OrderItems,
+            string Note,
+            DateTime DateOrder
+        );
 
 }

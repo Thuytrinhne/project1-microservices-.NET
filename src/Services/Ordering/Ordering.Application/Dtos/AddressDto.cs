@@ -2,12 +2,12 @@ namespace Ordering.Application.Dtos
 {
     public record AddressDto
     (
-        string FirstName,
-        string LastName,
-        string EmailAddress,
-        string AddressLine,
-        string Country,
-        string State,
-        string ZipCode
+    string CustomerName ,
+    string Phone,
+    string Province ,
+    string District,
+    string Ward,
+    string DetailAddress 
+     
     );
 }

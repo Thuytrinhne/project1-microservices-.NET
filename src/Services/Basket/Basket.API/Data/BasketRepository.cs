@@ -3,17 +3,18 @@ namespace Basket.API.Data
 {
     public class BasketRepository (IDocumentSession session) : IBasketRepository
     {
-        public async Task<bool> DeleteBasket(string userName, CancellationToken cancellationToken = default)
+
+        public async Task<bool> DeleteBasket(Guid userId, CancellationToken cancellationToken = default)
         {
-            session.Delete<ShoppingCart>(userName);
+            session.Delete<ShoppingCart>(userId);
             await  session.SaveChangesAsync(cancellationToken);
             return true;
         }
 
-        public async Task<ShoppingCart> GetBasket(string userName, CancellationToken cancellationToken = default)
+        public async Task<ShoppingCart> GetBasket(Guid userId, CancellationToken cancellationToken = default)
         {
-            var basket = await session.LoadAsync<ShoppingCart>(userName, cancellationToken);
-            return basket is null ? throw new  BasketNotFoundException(userName): basket;
+            var basket = await session.LoadAsync<ShoppingCart>(userId, cancellationToken);
+            return basket is null ? throw new  BasketNotFoundException(userId) : basket;
         }
 
         public async Task<ShoppingCart> StoreBasket(ShoppingCart basket, CancellationToken cancellationToken = default)
@@ -25,7 +26,7 @@ namespace Basket.API.Data
             
 
             var cartFrmDb = await session.Query<ShoppingCart>()
-                                 .FirstOrDefaultAsync(p => p.UserName == basket.UserName, cancellationToken);
+                                 .FirstOrDefaultAsync(p => p.UserId == basket.UserId, cancellationToken);
             if (cartFrmDb is  null) {
 
                 session.Store(basket);

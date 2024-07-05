@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Basket.API.Basket.StoreBasket
 {
     public record StoreBasketRequest (ShoppingCart Cart);
-    public record StoreBasketResponse (string UserName);
+    public record StoreBasketResponse (Guid UserId );
     public class StoreBasketEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
@@ -15,7 +15,7 @@ namespace Basket.API.Basket.StoreBasket
                 var command = request.Adapt<StoreBasketCommand>();
                 var result = await sender.Send(command);
                 var response = result.Adapt<StoreBasketResponse>();
-                return Results.Created($"/basket/{response.UserName}", response);
+                return Results.Created($"/basket/{response.UserId}", response);
 
             })
              .WithName("StoreBasket")

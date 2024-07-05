@@ -13,8 +13,8 @@ using Ordering.Infrastructure.Data;
 namespace Ordering.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240607111114_OrderInital")]
-    partial class OrderInital
+    [Migration("20240705132944_add-Note-attri")]
+    partial class addNoteattri
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,11 +81,15 @@ namespace Ordering.Infrastructure.Data.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Note")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("Draft");
+                        .HasDefaultValue("Pending");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -94,39 +98,35 @@ namespace Ordering.Infrastructure.Data.Migrations
                         {
                             b1.IsRequired();
 
-                            b1.Property<string>("AddressLine")
+                            b1.Property<string>("CustomerName")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)");
+
+                            b1.Property<string>("DetailAddress")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)");
+
+                            b1.Property<string>("District")
                                 .IsRequired()
                                 .HasMaxLength(180)
                                 .HasColumnType("nvarchar(180)");
 
-                            b1.Property<string>("Country")
+                            b1.Property<string>("Phone")
                                 .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("nvarchar(50)");
 
-                            b1.Property<string>("EmailAddress")
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)");
-
-                            b1.Property<string>("FirstName")
+                            b1.Property<string>("Province")
                                 .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("nvarchar(50)");
 
-                            b1.Property<string>("LastName")
+                            b1.Property<string>("Ward")
                                 .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("nvarchar(50)");
-
-                            b1.Property<string>("State")
-                                .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)");
-
-                            b1.Property<string>("ZipCode")
-                                .IsRequired()
-                                .HasMaxLength(5)
-                                .HasColumnType("nvarchar(5)");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("OrderName", "Ordering.Domain.Models.Order.OrderName#OrderName", b1 =>
@@ -134,7 +134,6 @@ namespace Ordering.Infrastructure.Data.Migrations
                             b1.IsRequired();
 
                             b1.Property<string>("Value")
-                                .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("nvarchar(100)")
                                 .HasColumnName("OrderName");
@@ -145,7 +144,6 @@ namespace Ordering.Infrastructure.Data.Migrations
                             b1.IsRequired();
 
                             b1.Property<string>("CVV")
-                                .IsRequired()
                                 .HasMaxLength(3)
                                 .HasColumnType("nvarchar(3)");
 
@@ -154,16 +152,14 @@ namespace Ordering.Infrastructure.Data.Migrations
                                 .HasColumnType("nvarchar(50)");
 
                             b1.Property<string>("CardNumber")
-                                .IsRequired()
                                 .HasMaxLength(24)
                                 .HasColumnType("nvarchar(24)");
 
                             b1.Property<string>("Expiration")
-                                .IsRequired()
                                 .HasMaxLength(10)
                                 .HasColumnType("nvarchar(10)");
 
-                            b1.Property<int>("PaymentMethod")
+                            b1.Property<int?>("PaymentMethod")
                                 .HasColumnType("int");
                         });
 
@@ -171,39 +167,35 @@ namespace Ordering.Infrastructure.Data.Migrations
                         {
                             b1.IsRequired();
 
-                            b1.Property<string>("AddressLine")
+                            b1.Property<string>("CustomerName")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)");
+
+                            b1.Property<string>("DetailAddress")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)");
+
+                            b1.Property<string>("District")
                                 .IsRequired()
                                 .HasMaxLength(180)
                                 .HasColumnType("nvarchar(180)");
 
-                            b1.Property<string>("Country")
+                            b1.Property<string>("Phone")
                                 .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("nvarchar(50)");
 
-                            b1.Property<string>("EmailAddress")
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)");
-
-                            b1.Property<string>("FirstName")
+                            b1.Property<string>("Province")
                                 .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("nvarchar(50)");
 
-                            b1.Property<string>("LastName")
+                            b1.Property<string>("Ward")
                                 .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("nvarchar(50)");
-
-                            b1.Property<string>("State")
-                                .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)");
-
-                            b1.Property<string>("ZipCode")
-                                .IsRequired()
-                                .HasMaxLength(5)
-                                .HasColumnType("nvarchar(5)");
                         });
 
                     b.HasKey("Id");

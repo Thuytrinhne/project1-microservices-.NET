@@ -10,6 +10,9 @@ namespace Ordering.Domain.Models
         public Address BillingAddress { get; private set; } = default!;
         public Payment Payment { get; private set; } = default!;
         public OrderStatus Status { get; private set; } = OrderStatus.Pending;
+        public string Note { get; private set; }
+        public DateTime DateOrder { get; private set; } = DateTime.UtcNow;
+
         public decimal TotalPrice
         {
             get => OrderItems.Sum(x => x.Price * x.Quantity);

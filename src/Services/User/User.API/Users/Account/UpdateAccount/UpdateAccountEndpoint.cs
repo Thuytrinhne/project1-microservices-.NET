@@ -13,7 +13,7 @@ namespace User.API.Users.Account.UpdateAccount
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-           app.MapPatch("/accounts/{id}/general-infor", async ([FromForm]UpdateAccountRequest request, Guid id, ISender sender) =>
+           app.MapPatch("/users/{id}/general-infor", async ([FromForm]UpdateAccountRequest request, Guid id, ISender sender) =>
            {
                var updateAccountDTO = new UpdateAccountDto
                { Name = request.Name, Gender= request.Gender, DOB = request.DOB, Image = request.Image}; 

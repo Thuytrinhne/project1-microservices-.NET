@@ -33,7 +33,7 @@ namespace Catalog.API.Products.CreateProduct
                 var response = result.Adapt<CreateProductResponse>();
                 return Results.Created($"/products/{response.ProductId}", response);
             })
-                .DisableAntiforgery() //it need 
+                .DisableAntiforgery() //it need for store img 
                 .WithName("CreateProduct")
                 .Produces<CreateProductResponse>(StatusCodes.Status201Created)
                 .ProducesProblem(StatusCodes.Status400BadRequest)

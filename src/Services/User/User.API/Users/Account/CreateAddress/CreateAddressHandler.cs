@@ -4,7 +4,13 @@ using User.API.Users.Account.UpdateAccount;
 
 namespace User.API.Users.Account.CreateAddress
 {
-    public record CreateAddressCommand (Guid UserId, CreateUserAddressDto UserAddress)
+    public record CreateAddressCommand (Guid UserId,
+        string Phone,string Name,
+     int Default,
+     string Province,
+     string District,
+     string Ward,
+     string DetailAddress)
         :ICommand<CreateAddressResult>;
     public record CreateAddressResult (bool IsSuccess);
 
@@ -12,25 +18,25 @@ namespace User.API.Users.Account.CreateAddress
     {
         public CreateAddressValidator()
         {
-            RuleFor(x => x.UserAddress.Name)
+            RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name is required");
 
-            RuleFor(x => x.UserAddress.Phone)
+            RuleFor(x => x.Phone)
             .NotEmpty().WithMessage("Phone is required");
 
-            RuleFor(x => x.UserAddress.Default)
+            RuleFor(x => x.Default)
             .NotEmpty().WithMessage("Default is required");
 
-            RuleFor(x => x.UserAddress.Province)
+            RuleFor(x => x.Province)
             .NotEmpty().WithMessage("Province is required");
 
-            RuleFor(x => x.UserAddress.District)
+            RuleFor(x => x.District)
             .NotEmpty().WithMessage("District is required");
 
-            RuleFor(x => x.UserAddress.Ward)
+            RuleFor(x => x.Ward)
             .NotEmpty().WithMessage("Ward is required");
 
-            RuleFor(x => x.UserAddress.DetailAddress)
+            RuleFor(x => x.DetailAddress)
             .NotEmpty().WithMessage("DetailAddress is required");
 
         }
@@ -42,16 +48,17 @@ namespace User.API.Users.Account.CreateAddress
         public async  Task<CreateAddressResult> Handle(CreateAddressCommand command, CancellationToken cancellationToken)
         {
            var user =  await _userManager.FindByIdAsync(command.UserId.ToString());
+            var newAddress = command.Adapt<UserAddress>();
             if (user is not null)
             {
                 if (user.UserAddresses is null)
                 {
                     user.UserAddresses = new List<UserAddress>();
-                    command.UserAddress.Default = 1;
+                    newAddress.Default = 1;
                 }
                 else
                 {
-                    if(command.UserAddress.Default == 1)
+                    if(command.Default == 1)
                     {
                        var UserDefaultAddress =  user.UserAddresses.FirstOrDefault(addr => addr.Default == 1);
                        UserDefaultAddress.Default = 0; 
@@ -59,7 +66,7 @@ namespace User.API.Users.Account.CreateAddress
 
                 }
 
-                user.UserAddresses.Add(command.UserAddress.Adapt<UserAddress>());
+                user.UserAddresses.Add(newAddress);
                 var result =  await _userManager.UpdateAsync(user);
                 if(result.Succeeded)
                 {

@@ -2,34 +2,32 @@ namespace Ordering.Domain.ValueObjects
 {
     public  record Address // record: immutable
     {
-        public string FirstName { get;  } = default!;
-        public string LastName { get; } = default!;
-        public string? EmailAddress { get; } = default!;
-        public string AddressLine { get; } = default!;
-        public string Country { get;  } = default!;
-        public string State { get;  } = default!;
-        public string ZipCode { get;  } = default!;
+        public string CustomerName { get; set; } = default!;
+        public string Phone { get; set; } = default!;
+        public string Province { get; set; } = default!;
+        public string District { get; set; } = default!;
+        public string Ward { get; set; } = default!;
+        public string DetailAddress { get; set; } = default!;
         protected Address()
         {
             // required for EF
         }
 
-        private Address(string firstName, string lastName, string? emailAddress, string addressLine, string country, string state, string zipCode)
+        private Address(string customerName, string phone, string? province, string district, string ward, string detailAddress)
         {
-            FirstName = firstName;
-            LastName = lastName;
-            EmailAddress = emailAddress;
-            AddressLine = addressLine;
-            Country = country;
-            State = state;
-            ZipCode = zipCode;
+            CustomerName = customerName;
+            Phone = phone;
+            Province = province;
+            District = district;
+            Ward = ward;
+            DetailAddress = detailAddress;
         }
-        public static Address Of(string firstName, string lastName, string? emailAddress, string addressLine, string country, string state, string zipCode)
+        public static Address Of(string customerName, string phone, string? province, string district, string ward, string detailAddress)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(emailAddress);
-            ArgumentException.ThrowIfNullOrWhiteSpace(addressLine);
+            //ArgumentException.ThrowIfNullOrWhiteSpace(customerName);
+            //ArgumentException.ThrowIfNullOrWhiteSpace(phone);
 
-            return new Address(firstName,lastName,emailAddress,addressLine, country, state,zipCode);
+            return new Address(customerName, phone, province, district, ward, detailAddress);
         }
     }
 }

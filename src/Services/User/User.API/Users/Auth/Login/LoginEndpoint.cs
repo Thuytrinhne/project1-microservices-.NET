@@ -5,9 +5,8 @@ using User.API.Users.Auth.Register;
 
 namespace User.API.Users.Auth.Login
 {
-    public record LoginRequest(LoginDto User);
-     
-    public record LoginResponse(LoginResponseDto User);
+    public record LoginRequest(string Email, string Password);     
+    public record LoginResponse(UserDto User, string Token);
     public class LoginEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)

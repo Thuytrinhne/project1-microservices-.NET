@@ -10,7 +10,7 @@ namespace User.API.Users.Account.UpdateAddress
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPatch("/accounts/{id}/addresses", async (Guid id, UpdateAddressRequest request, ISender sender ) =>
+            app.MapPatch("/users/{id}/addresses", async (Guid id, UpdateAddressRequest request, ISender sender ) =>
             {
                 var command = new UpdateAddressCommand(id, request.UserAddress);
                 var result = await sender.Send(command);

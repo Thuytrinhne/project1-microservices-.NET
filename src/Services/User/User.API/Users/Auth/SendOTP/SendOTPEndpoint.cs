@@ -1,5 +1,6 @@
 
 using Mapster;
+using Microsoft.AspNetCore.Http.HttpResults;
 using User.API.Users.Auth.Login;
 
 namespace User.API.Users.Auth.SendOTP
@@ -15,7 +16,11 @@ namespace User.API.Users.Auth.SendOTP
                 var command = request.Adapt<SendOTPCommand>();
                 var result = await  sender.Send(command);
                 var response = result.Adapt<SendOTPResponse>();
-                return Results.Ok(response);
+                if (response.IsSuccess)
+                {
+                    return Results.Ok(response);
+                }
+                return Results.BadRequest(response);
             })
                 .WithName("SendOTP")
                 .Produces<SendOTPResponse>(StatusCodes.Status201Created)

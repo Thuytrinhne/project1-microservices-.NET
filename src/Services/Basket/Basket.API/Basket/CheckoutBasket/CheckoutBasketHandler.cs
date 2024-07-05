@@ -16,7 +16,7 @@ namespace Basket.API.Basket.CheckoutBasket
         public CheckoutBasketCommandValidator()
         {
             RuleFor(x => x.BasketCheckoutDto).NotNull().WithMessage("BasketCheckoutDto can not be null");
-            RuleFor(x => x.BasketCheckoutDto.UserName).NotEmpty().WithMessage("UserName is required");
+            RuleFor(x => x.BasketCheckoutDto.CustomerId).NotEmpty().WithMessage("UserName is required");
         }
     }
     internal class CheckoutBasketHandler
@@ -29,20 +29,22 @@ namespace Basket.API.Basket.CheckoutBasket
             // set totalprice on basket checkout event message
             // send basket checkout event to rabitmq using masstransit
             // delete the basket 
-            var basket = await repository.GetBasket(command.BasketCheckoutDto.UserName, cancellationToken);
+            var basket = await repository.GetBasket(command.BasketCheckoutDto.CustomerId, cancellationToken);
             if(basket == null)
             {
                 return new CheckoutBasketResult(false);
             }
-
             var eventMessage = command.BasketCheckoutDto.Adapt<BasketCheckoutEvent>();
             eventMessage.TotalPrice = basket.TotalPrice;
-
+            foreach (var item in basket.Items)
+            {
+                eventMessage.OrderItems.Add(new OrderItem(item.ProductId, item.Quantity, item.Price));
+            }
 
             await publishEndpoint.Publish(eventMessage, cancellationToken);
 
 
-            await repository.DeleteBasket(command.BasketCheckoutDto.UserName, cancellationToken);
+            await repository.DeleteBasket(command.BasketCheckoutDto.CustomerId, cancellationToken);
 
 
             return new CheckoutBasketResult(true);

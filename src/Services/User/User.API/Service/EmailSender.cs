@@ -18,16 +18,22 @@ namespace User.API.Service
             var client = new SmtpClient(_mailConfig.Host, int.Parse(_mailConfig.Port!))
             {
                 EnableSsl = true,
-                UseDefaultCredentials = false,
+                //UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(_mailConfig.Google_Email, _mailConfig.Google_Password)
             };
-
-            await client.SendMailAsync(
-                new MailMessage(from: _mailConfig.Google_Email!,
-                                to: email,
-                                subject: subject,
-                                body: message
-                                ));
+            try
+            {
+                await client.SendMailAsync(
+                    new MailMessage(from: _mailConfig.Google_Email!,
+                                    to: email,
+                                    subject: subject,
+                                    body: message
+                                    ));
+            }
+            catch(Exception ex)
+            {
+                
+            }
         }
 
     }
