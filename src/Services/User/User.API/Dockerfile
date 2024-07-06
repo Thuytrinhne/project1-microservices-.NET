@@ -6,10 +6,6 @@ WORKDIR /app
 EXPOSE 8080
 #EXPOSE 8081
 
-# Copy aspnetapp.pfx and rootCA.cer
-#COPY ./aspnetapp.pfx /https/aspnetapp.pfx
-#COPY ./rootCA.cer /https/rootCA.cer
-
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
