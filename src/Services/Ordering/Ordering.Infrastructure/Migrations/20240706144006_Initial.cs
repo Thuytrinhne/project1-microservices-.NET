@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Ordering.Infrastructure.Data.Migrations
+namespace Ordering.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -29,6 +29,44 @@ namespace Ordering.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Pending"),
+                    Note = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    DateOrder = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    BillingAddress_CustomerName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    BillingAddress_DetailAddress = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    BillingAddress_District = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: false),
+                    BillingAddress_Phone = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    BillingAddress_Province = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    BillingAddress_Ward = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrderName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Payment_CVV = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
+                    Payment_CardName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Payment_CardNumber = table.Column<string>(type: "nvarchar(24)", maxLength: 24, nullable: true),
+                    Payment_Expiration = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    Payment_PaymentMethod = table.Column<int>(type: "int", nullable: true),
+                    ShippingAddress_CustomerName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ShippingAddress_DetailAddress = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ShippingAddress_District = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: false),
+                    ShippingAddress_Phone = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ShippingAddress_Province = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ShippingAddress_Ward = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -46,52 +84,15 @@ namespace Ordering.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Draft"),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    BillingAddress_CustomerName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    BillingAddress_DetailAddress = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    BillingAddress_District = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: false),
-                    BillingAddress_Phone = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    BillingAddress_Province = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    BillingAddress_Ward = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    OrderName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Payment_CVV = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
-                    Payment_CardName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Payment_CardNumber = table.Column<string>(type: "nvarchar(24)", maxLength: 24, nullable: false),
-                    Payment_Expiration = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Payment_PaymentMethod = table.Column<int>(type: "int", nullable: false),
-                    ShippingAddress_CustomerName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ShippingAddress_DetailAddress = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ShippingAddress_District = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: false),
-                    ShippingAddress_Phone = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ShippingAddress_Province = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ShippingAddress_Ward = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
-                  
-                });
-
-            migrationBuilder.CreateTable(
                 name: "OrderItems",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     OrderId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -111,7 +112,6 @@ namespace Ordering.Infrastructure.Data.Migrations
                         column: x => x.OrderId1,
                         principalTable: "Orders",
                         principalColumn: "Id");
-                   
                 });
 
             migrationBuilder.CreateIndex(
@@ -129,32 +129,22 @@ namespace Ordering.Infrastructure.Data.Migrations
                 name: "IX_OrderItems_OrderId1",
                 table: "OrderItems",
                 column: "OrderId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_ProductId",
-                table: "OrderItems",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_CustomerId",
-                table: "Orders",
-                column: "CustomerId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "OrderItems");
+                name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "OrderItems");
 
             migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Customers");
+                name: "Orders");
         }
     }
 }

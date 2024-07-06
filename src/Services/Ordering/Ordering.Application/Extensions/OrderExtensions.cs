@@ -1,4 +1,6 @@
 
+using System.Linq;
+
 namespace Ordering.Application.Extensions
 {
     public static  class OrderExtensions
@@ -36,10 +38,11 @@ namespace Ordering.Application.Extensions
                          order.Payment.PaymentMethod.Value
                        ),
                        Status: order.Status,
+                       TotalPrice: order.TotalPrice,
                        Note: order.Note,
-                       DateOrder: DateTime.Now,
+                       DateOrder: order.DateOrder,
                        OrderItems: order.OrderItems.Select(oi => new OrderItemDto(oi.OrderId.Value, oi.ProductId.Value, oi.Quantity, oi.Price)).ToList()
-
+                      
                      ));
             
         }
@@ -61,7 +64,9 @@ namespace Ordering.Application.Extensions
                                 Payment: new PaymentDto(order.Payment.CardName!, order.Payment.CardNumber, order.Payment.Expiration, order.Payment.CVV, order.Payment.PaymentMethod.Value),
                                 Status: order.Status,
                                 Note: order.Note,
-                                DateOrder: DateTime.Now,
+                                TotalPrice: order.TotalPrice,
+
+                                DateOrder: order.DateOrder,
                                 OrderItems: order.OrderItems.Select(oi => new OrderItemDto(oi.OrderId.Value, oi.ProductId.Value, oi.Quantity, oi.Price)).ToList()
                             );
         }

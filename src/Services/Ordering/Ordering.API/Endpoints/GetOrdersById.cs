@@ -6,7 +6,7 @@ namespace Ordering.API.Endpoints
         - Constructs a GetOrdersByNameQuery
         - Retrieves and returns matching orders 
      */
-    public record GetOrdersByIdResponse(IEnumerable<OrderDto> Orders);
+    public record GetOrdersByIdResponse(OrderDto Order);
     public class GetOrdersById : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)

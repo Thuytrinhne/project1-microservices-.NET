@@ -9,13 +9,13 @@ namespace Ordering.Application.Orders.Queries.GetOrderByName
         {
             // get orders by name using dbContext
             // return result
-            var orders = await dbContext.Orders
+            var order = await dbContext.Orders
                 .Include(o => o.OrderItems)
                 .AsNoTracking()
-                .Where(o => o.Id.Value == query.Id)
+                .Where(o => o.Id == OrderId.Of(query.Id))
                 .OrderByDescending(o => o.CreatedAt)
-                .ToListAsync(cancellationToken);
-            return new GetOrdersByIdResult(orders.ToOrderDtoList());
+                .FirstOrDefaultAsync();
+            return new GetOrdersByIdResult(order.ToOrderDto());
         }
 
       

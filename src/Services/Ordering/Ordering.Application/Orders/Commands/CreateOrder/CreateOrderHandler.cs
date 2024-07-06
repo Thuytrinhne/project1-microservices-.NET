@@ -11,10 +11,17 @@ public class CreateOrderHandler(IAppDbContext dbContext)
         var order = CreateNewOrder(command.Order);
 
         await  dbContext.Orders.AddAsync(order);
-     
+        try
+        {
+
             await dbContext.SaveChangesAsync(cancellationToken);
-       
-        
+        }
+        catch (Exception ex)
+        {
+            throw new  Exception("Errors occured in the order");
+        }
+
+
         return new CreateOrderResult(order.Id.Value);
     }
 
@@ -29,6 +36,7 @@ public class CreateOrderHandler(IAppDbContext dbContext)
                 orderName: OrderName.Of(orderDto.OrderName),
                 shippingAddress: shippingAddress,
                 billingAddress: billingAddress,
+                note: orderDto.Note ??"",
                 payment: Payment.Of(orderDto.Payment.CardName, orderDto.Payment.CardNumber, orderDto.Payment.Expiration, orderDto.Payment.Cvv, orderDto.Payment.PaymentMethod)
                 );
 

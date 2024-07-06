@@ -14,9 +14,9 @@ namespace Ordering.API.Endpoints
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/orders/", async ([AsParameters]PaginationRequest request, ISender sender) =>
+            app.MapGet("/orders/", async ([AsParameters]PaginationRequest request,  ISender sender, int? StatusOrder = -1) =>
             {
-                var result = await  sender.Send(new GetOrdersQuery(request));
+                var result = await  sender.Send(new GetOrdersQuery(request,  StatusOrder.Value));
                 var response = result.Adapt<GetOrdersResponse>();
                 return Results.Ok(response);
             })

@@ -2,7 +2,9 @@ namespace Ordering.Domain.Models
 {
     public class OrderItem : Entity<OrderItemId> // it will be entity from the our order aggregate 
     {
-        internal OrderItem(OrderId orderId, ProductId productId, int quantity, decimal price)
+        // Parameterless constructor required by EF Core
+        private OrderItem() { }
+        public OrderItem(OrderId orderId, ProductId productId, int quantity, decimal price)
         {
             Id=OrderItemId.Of(Guid.NewGuid());
             OrderId = orderId;

@@ -10,7 +10,8 @@ namespace Ordering.Application.Dtos
             OrderStatus Status,
             List<OrderItemDto> OrderItems,
             string Note,
-            DateTime DateOrder
+            DateTime DateOrder,
+            decimal TotalPrice
         );
 
 }

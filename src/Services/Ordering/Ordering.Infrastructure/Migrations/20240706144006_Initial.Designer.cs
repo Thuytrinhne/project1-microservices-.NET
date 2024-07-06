@@ -10,11 +10,11 @@ using Ordering.Infrastructure.Data;
 
 #nullable disable
 
-namespace Ordering.Infrastructure.Data.Migrations
+namespace Ordering.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240705132944_add-Note-attri")]
-    partial class addNoteattri
+    [Migration("20240706144006_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,8 +72,8 @@ namespace Ordering.Infrastructure.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime>("DateOrder")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -127,6 +127,15 @@ namespace Ordering.Infrastructure.Data.Migrations
                                 .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("nvarchar(50)");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("CustomerId", "Ordering.Domain.Models.Order.CustomerId#CustomerId", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<Guid>("Value")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("CustomerId");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("OrderName", "Ordering.Domain.Models.Order.OrderName#OrderName", b1 =>
@@ -200,8 +209,6 @@ namespace Ordering.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
-
                     b.ToTable("Orders");
                 });
 
@@ -231,19 +238,23 @@ namespace Ordering.Infrastructure.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.ComplexProperty<Dictionary<string, object>>("ProductId", "Ordering.Domain.Models.OrderItem.ProductId#ProductId", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<Guid>("Value")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("ProductId");
+                        });
 
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
 
                     b.HasIndex("OrderId1");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("OrderItems");
                 });
@@ -278,15 +289,6 @@ namespace Ordering.Infrastructure.Data.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Ordering.Domain.Models.Order", b =>
-                {
-                    b.HasOne("Ordering.Domain.Models.Customer", null)
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Ordering.Domain.Models.OrderItem", b =>
                 {
                     b.HasOne("Ordering.Domain.Models.Order", null)
@@ -298,12 +300,6 @@ namespace Ordering.Infrastructure.Data.Migrations
                     b.HasOne("Ordering.Domain.Models.Order", null)
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId1");
-
-                    b.HasOne("Ordering.Domain.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Ordering.Domain.Models.Order", b =>

@@ -26,8 +26,8 @@ app.UseCors(MyAllowSpecificOrigins);
 
 // configure the HTTP request pipeline
 app.UseApiService();  // use extention method for web application
-//if (app.Environment.IsDevelopment())
-//{
-//    await app.InitialiseDatabaseAsync();
-//}
+if (app.Environment.IsDevelopment())
+{
+    await app.InitialiseDatabaseAsync();
+}
 app.Run();

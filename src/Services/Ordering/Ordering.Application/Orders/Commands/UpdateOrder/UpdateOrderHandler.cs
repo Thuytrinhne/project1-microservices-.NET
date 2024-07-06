@@ -10,7 +10,7 @@ public class UpdateOrderHandler(IAppDbContext dbContext)
         //save to database
         //return result
 
-        var orderId = OrderId.Of(command.Order.Id);
+        var orderId = OrderId.Of(command.OrderId);
         var order = await dbContext.Orders
             .FindAsync([orderId], cancellationToken: cancellationToken);
 
@@ -18,7 +18,7 @@ public class UpdateOrderHandler(IAppDbContext dbContext)
         {
             throw new OrderNotFoundException(command.Order.Id);
         }
-
+       
         UpdateOrderWithNewValues(order, command.Order);
 
         dbContext.Orders.Update(order);
@@ -29,17 +29,11 @@ public class UpdateOrderHandler(IAppDbContext dbContext)
 
     public void UpdateOrderWithNewValues(Order order, OrderDto orderDto)
     {
-        var updatedShippingAddress = Address.Of(orderDto.ShippingAddress.CustomerName, orderDto.ShippingAddress.Phone, orderDto.ShippingAddress.Province, orderDto.ShippingAddress.District, orderDto.ShippingAddress.Ward, orderDto.ShippingAddress.DetailAddress);
-        var updatedBillingAddress = Address.Of(orderDto.ShippingAddress.CustomerName, orderDto.ShippingAddress.Phone, orderDto.ShippingAddress.Province, orderDto.ShippingAddress.District, orderDto.ShippingAddress.Ward, orderDto.ShippingAddress.DetailAddress);
-        var updatedPayment = Payment.Of(orderDto.Payment.CardName, orderDto.Payment.CardNumber, orderDto.Payment.Expiration, orderDto.Payment.Cvv, orderDto.Payment.PaymentMethod);
+        //var updatedShippingAddress = Address.Of(orderDto.ShippingAddress.CustomerName, orderDto.ShippingAddress.Phone, orderDto.ShippingAddress.Province, orderDto.ShippingAddress.District, orderDto.ShippingAddress.Ward, orderDto.ShippingAddress.DetailAddress);
+        //var updatedBillingAddress = Address.Of(orderDto.ShippingAddress.CustomerName, orderDto.ShippingAddress.Phone, orderDto.ShippingAddress.Province, orderDto.ShippingAddress.District, orderDto.ShippingAddress.Ward, orderDto.ShippingAddress.DetailAddress);
+        //var updatedPayment = Payment.Of(orderDto.Payment.CardName, orderDto.Payment.CardNumber, orderDto.Payment.Expiration, orderDto.Payment.Cvv, orderDto.Payment.PaymentMethod);
 
-        order.Update(
-            id: order.Id,
-            customerId: CustomerId.Of( orderDto.CustomerId), 
-            orderName: OrderName.Of(orderDto.OrderName),
-            shippingAddress: updatedShippingAddress,
-            billingAddress: updatedBillingAddress,
-            payment: updatedPayment,
+        order.UpdateStatus(  
             status: orderDto.Status);
     }
 }

@@ -18,7 +18,7 @@ namespace Ordering.Domain.Models
             get => OrderItems.Sum(x => x.Price * x.Quantity);
             private set { }
         }
-        public static Order Create(OrderId id, CustomerId customerId, OrderName orderName, Address shippingAddress,Address billingAddress, Payment payment)
+        public static Order Create(OrderId id, CustomerId customerId, OrderName orderName, Address shippingAddress,Address billingAddress, Payment payment, string note)
         {
             var order = new Order
             {
@@ -28,19 +28,16 @@ namespace Ordering.Domain.Models
                 ShippingAddress = shippingAddress,
                 BillingAddress = billingAddress,
                 Payment = payment,
-                Status = OrderStatus.Pending
+                Status = OrderStatus.Pending,
+                Note = note,
+                DateOrder = DateTime.UtcNow,
             };
             order.AddDomainEvent(new OrderCreatedEvent(order));
             return order;
         }
-        public void Update(OrderId id, CustomerId customerId, OrderName orderName, Address shippingAddress, Address billingAddress, Payment payment, OrderStatus status)
+        public void UpdateStatus(OrderStatus status)
         {
-            OrderName = orderName;
-            ShippingAddress = shippingAddress;
-            BillingAddress = billingAddress;
-            Payment = payment;
             Status = status;
-         
             AddDomainEvent(new OrderUpdatedEvent(this));
         }
         public void Add(ProductId productId, int quantity, decimal price)

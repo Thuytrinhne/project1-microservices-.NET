@@ -45,7 +45,8 @@ namespace Ordering.Application.Orders.EventHandlers.Integration
                 Note: message.Note,
                 DateOrder: DateTime.Now,
                 Status: Ordering.Domain.Enums.OrderStatus.Pending,
-                OrderItems: orderItems
+                OrderItems: orderItems,
+                TotalPrice:0
                 );
             // here should get this product information from the incoming request message from RabbitMQ 
             return new CreateOrderCommand(orderDto);

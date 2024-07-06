@@ -10,10 +10,10 @@ namespace Ordering.Infrastructure.Data.Configurations
             builder.Property(o => o.Id).HasConversion(
                 customerId => customerId.Value,
                 dbId => OrderId.Of(dbId));
-            builder.HasOne<Customer>()
-                .WithMany()
-                .HasForeignKey(o => o.CustomerId)
-                .IsRequired();
+            //builder.HasOne<Customer>()
+            //    .WithMany()
+            //    .HasForeignKey(o => o.CustomerId)
+            //    .IsRequired();
             builder.Property(o => o.Note).HasMaxLength(1000).IsRequired(false);
             builder.HasMany<OrderItem>()
             .WithOne()
@@ -22,6 +22,15 @@ namespace Ordering.Infrastructure.Data.Configurations
             builder.HasMany(o => o.OrderItems)
             .WithOne()
             .HasForeignKey(oi => oi.OrderId);
+
+            builder.ComplexProperty(
+          o => o.CustomerId, nameBuilder =>
+          {
+              nameBuilder.Property(n => n.Value)
+              .HasColumnName(nameof(Order.CustomerId));
+      
+          });
+
             builder.ComplexProperty(
                 o => o.OrderName, nameBuilder =>
                 {
@@ -111,6 +120,10 @@ namespace Ordering.Infrastructure.Data.Configurations
                     s=>s.ToString(),
                     dbStatus => (OrderStatus)Enum.Parse(typeof(OrderStatus), dbStatus));
             builder.Property(o => o.TotalPrice);
+
+
+
+
         }
     }
 }
