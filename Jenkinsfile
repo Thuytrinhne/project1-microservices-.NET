@@ -22,6 +22,11 @@ pipeline {
                     echo "DOCKER_REGISTRY is set to: ${DOCKER_REGISTRY}"
                 }
             }
+            post {
+                success {
+                    echo "check DOCKER_REGISTRY successfully"
+                }
+            }
         }
         stage("Build docker image"){
             steps{
@@ -33,6 +38,11 @@ pipeline {
                         sudo DOCKER_REGISTRY=${ACR_LOGIN_SERVER}/${DOCKER_REGISTRY} docker-compose build
                         '''
                     }
+                }
+            }
+            post {
+                success {
+                    echo "Build docker image successfully"
                 }
             }
         }
@@ -48,6 +58,11 @@ pipeline {
                             '''
                         }
                     }
+                }
+            }
+            post {
+                success {
+                    echo "Upload Image to ACR successfully"
                 }
             }
         }
