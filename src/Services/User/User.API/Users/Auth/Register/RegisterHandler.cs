@@ -1,4 +1,4 @@
-
+﻿
 using Basket.API.Exception;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
@@ -39,10 +39,9 @@ namespace User.API.Users.Auth.Register
     {
         public async  Task<RegisterResult> Handle(RegisterCommand command, CancellationToken cancellationToken)
         {
-            // check OTP
+ 
             if (await  checValidOTP(command.User.Email, command.User.OTP)==false)
-                return new RegisterResult(false);
-
+               return new RegisterResult(false);
 
 
             var appUser = command.User.Adapt<ApplicationUser>();

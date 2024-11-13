@@ -13,7 +13,7 @@ namespace User.API.Users.Auth.Login
         {
             app.MapPost("/auth/login", async (LoginRequest request, ISender sender) =>
             {
-                var command   = request.Adapt<LoginCommand>();
+                var command = request.Adapt<LoginCommand>();
                 var result = await sender.Send(command);
                 var response = result.Adapt<LoginResponse>();
                 return Results.Ok(response);

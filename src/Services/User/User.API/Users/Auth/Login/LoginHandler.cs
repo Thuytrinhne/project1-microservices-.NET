@@ -40,7 +40,8 @@ namespace User.API.Users.Auth.Login
             {
                 if (await _userManager.CheckPasswordAsync(appUser, command.Password))
                 {
-                    // generate token
+                    // generate token thôi ng? ?ã ha
+
                     var userDto = appUser.ToUserDto();
                    
                     string token = await _jwtToken.CreateJwtToken(appUser, Authorization.AccessTokenExpiredTimeInMinutes);

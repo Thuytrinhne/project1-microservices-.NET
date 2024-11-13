@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 namespace Catalog.API.Products.GetProductById
 {
     public record GetProductByIdResponse(ProductDto Product);
-    public class GetProductByIdEndpoint : ICarterModule
+    public class GetProductByIdRangeEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {

@@ -7,8 +7,8 @@ namespace Ordering.Infrastructure.Extensions
         {
             using var scope = app.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            context.Database.MigrateAsync().GetAwaiter().GetResult(); // auto migration 
-            await SeedAsync(context);
+            await context.Database.MigrateAsync(); // auto migration 
+            //  await SeedAsync(context);
         }
         private static async Task SeedAsync(AppDbContext context)
         {

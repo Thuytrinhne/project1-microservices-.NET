@@ -161,7 +161,7 @@ services:
 
     ports:
       - "6004:8080"
-      # - "6064:8081"
+      - "6064:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
