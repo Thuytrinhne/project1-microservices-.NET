@@ -6,7 +6,7 @@ using User.API.Users.Auth.Login;
 namespace User.API.Users.Auth.SendOTP
 {
     public record SendOTPRequest (string Email);
-    public record SendOTPResponse (bool IsSuccess);
+    public record SendOTPResponse(bool IsSuccess, string Message);
     public class SendOTPEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
@@ -18,7 +18,7 @@ namespace User.API.Users.Auth.SendOTP
                 var response = result.Adapt<SendOTPResponse>();
                 if (response.IsSuccess)
                 {
-                    return Results.Ok(response);
+                    return Results.Ok(new SendOTPResponse(true, "OTP sent successfully"));
                 }
                 return Results.BadRequest(response);
             })
