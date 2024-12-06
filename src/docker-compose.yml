@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
    gateway.api:
-     image: ${DOCKER_REGISTRY-}gatewayapi
+     image: ${DOCKER_REGISTRY}/gatewayapi
      build:
        context: .
        dockerfile: Gateway/Gateway.API/Dockerfile
@@ -41,7 +41,7 @@ services:
 
 
    catalog.api:
-      image: ${DOCKER_REGISTRY-}catalogapi
+      image:  ${DOCKER_REGISTRY}/catalogapi
       build:
         context: .
         dockerfile: Services/Catalog/Catalog.API/Dockerfile
@@ -51,7 +51,7 @@ services:
 
 
    basket.api:
-      image: ${DOCKER_REGISTRY-}basketapi
+      image:  ${DOCKER_REGISTRY}/basketapi
       build:
           context: .
           dockerfile: Services/Basket/Basket.API/Dockerfile
@@ -59,7 +59,7 @@ services:
         - mynetworks
 
    discount.grpc:
-     image: ${DOCKER_REGISTRY-}discountgrpc
+     image:  ${DOCKER_REGISTRY}/discountgrpc
      build:
        context: .
        dockerfile: Services/Discount/Discount.Grpc/Dockerfile
@@ -67,7 +67,7 @@ services:
         - mynetworks
 
    ordering.api:
-     image: ${DOCKER_REGISTRY-}orderingapi
+     image:  ${DOCKER_REGISTRY}/orderingapi
      build:
        context: .
        dockerfile: Services/Ordering/Ordering.API/Dockerfile
@@ -77,7 +77,7 @@ services:
    
 
    user.api:
-     image: ${DOCKER_REGISTRY-}userapi
+     image:  ${DOCKER_REGISTRY}/userapi
      build:
        context: .
        dockerfile: Services/User/User.API/Dockerfile
