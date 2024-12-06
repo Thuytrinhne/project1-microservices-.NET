@@ -30,6 +30,7 @@ namespace Basket.API.Basket.CheckoutBasket
             // send basket checkout event to rabitmq using masstransit
             // delete the basket 
             var basket = await repository.GetBasket(command.BasketCheckoutDto.CustomerId, cancellationToken);
+            Console.WriteLine("I am Learning C#");
             if(basket == null)
             {
                 return new CheckoutBasketResult(false);
