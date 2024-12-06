@@ -1,4 +1,4 @@
-
+def utils 
 
 pipeline {
     agent any
@@ -73,7 +73,7 @@ pipeline {
                 script {
                     withEnv(["KUBECONFIG=${KUBECONFIG}"]){
                         def imageName = ["basket", "catalog", "discount", "ordering", "user"]
-                        def tail_prefix = "-delp"
+                        def tail_prefix = "-depl"
                         imageName.each { name ->
                             def tmp = name + tail_prefix
                             sh "KUBECONFIG=${KUBECONFIG} kubectl rollout restart deployment/${tmp} -n ${DEPLOY_ENV}"
