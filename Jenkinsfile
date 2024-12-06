@@ -1,30 +1,26 @@
+
+
 pipeline {
     agent any
     environment{
-        registry = "minhtuanhth95"
-        registryCredential = "dockerhub"
-        DOCKER_REGISTRY="minhtuanhth95"
-        dockerImage = ""
-        
-        REGISTRY_NAME = "crkubercloud"
-        ACR_LOGIN_SERVER = "${REGISTRY_NAME}.azurecr.io"
-        REPOSITORY_NAME = "node-express-app"
+        registryCredential = "drop-ocean-registry-cred"
+        registryUrl = "registry.digitalocean.com"
+        DOCKER_REGISTRY="registry.digitalocean.com/microservices-registry-uit"
+        FILE_PATH = ".src/switchEnv.groovy"
+        KUBECONFIG="/home/jenkins/k8s-natngoc-27-04-2003-kubeconfig.yaml"
     }
     stages { 
-        // stage("Checkout"){
-        //     steps{
-        //         checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'justForPersonalTokenGithub', url: 'https://github.com/tuanhth95/project1-microservices-.NET-main.git']])
-        //     }
-        // }
-        stage("check DOCKER_REGISTRY"){
+        stage("login to docker registry") {
             steps{
                 script{
-                    echo "DOCKER_REGISTRY is set to: ${DOCKER_REGISTRY}"
+                    withCredentials([usernamePassword(credentialsId: 'drop-ocean-registry-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh "echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin ${registryUrl}"
+                    }
                 }
             }
             post {
                 success {
-                    echo "check DOCKER_REGISTRY successfully"
+                    echo "login DOCKER_REGISTRY successfully"
                 }
             }
         }
@@ -33,9 +29,11 @@ pipeline {
                 script{
                     withEnv(["DOCKER_REGISTRY=${DOCKER_REGISTRY}"]){
                         sh '''
-                        cd ./src
-                        sudo DOCKER_REGISTRY=${ACR_LOGIN_SERVER}/${DOCKER_REGISTRY} docker-compose down
-                        sudo DOCKER_REGISTRY=${ACR_LOGIN_SERVER}/${DOCKER_REGISTRY} docker-compose build
+                            cd ./src
+                            echo $DOCKER_REGISTRY
+                            DOCKER_REGISTRY=${DOCKER_REGISTRY} docker-compose down
+                            DOCKER_REGISTRY=${DOCKER_REGISTRY} docker-compose build
+                            docker images
                         '''
                     }
                 }
@@ -46,23 +44,46 @@ pipeline {
                 }
             }
         }
-        stage('Upload Image to ACR') {
-            steps{   
+        stage("Push docker image"){
+            steps{
+                script{
+                    withCredentials([usernamePassword(credentialsId: 'drop-ocean-registry-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh '''
+                        echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin ${registryUrl}
+                        cd ./src
+                        DOCKER_REGISTRY=${DOCKER_REGISTRY} docker-compose push
+                        '''
+                    }
+                }
+            }
+            post {
+                success {
+                    echo "Push docker image successfully"
+                }
+            }
+        }
+        stage("Deploy to K8s"){
+            input {
+                message "Choose the environment to deploy"
+                parameters {
+                    choice(name: 'DEPLOY_ENV', choices: ['blue', 'green'], description: 'Who should I say hello to?')
+                }
+            }
+            steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'crKuberCloud', usernameVariable: 'SERVICE_PRINCIPAL_ID', passwordVariable: 'SERVICE_PRINCIPAL_PASSWORD')]) {
-                        withEnv(["DOCKER_REGISTRY=${DOCKER_REGISTRY}"]){
-                            sh '''
-                            cd ./src
-                            docker login ${ACR_LOGIN_SERVER} -u $SERVICE_PRINCIPAL_ID -p $SERVICE_PRINCIPAL_PASSWORD
-                            DOCKER_REGISTRY=${ACR_LOGIN_SERVER}/${DOCKER_REGISTRY} docker-compose push
-                            '''
+                    withEnv(["KUBECONFIG=${KUBECONFIG}"]){
+                        def imageName = ["basket", "catalog", "discount", "ordering", "user"]
+                        def tail_prefix = "-delp"
+                        imageName.each { name ->
+                            def tmp = name + tail_prefix
+                            sh "KUBECONFIG=${KUBECONFIG} kubectl rollout restart deployment/${tmp} -n ${DEPLOY_ENV}"
                         }
                     }
                 }
             }
             post {
                 success {
-                    echo "Upload Image to ACR successfully"
+                    echo "Deploy docker image successfully"
                 }
             }
         }
