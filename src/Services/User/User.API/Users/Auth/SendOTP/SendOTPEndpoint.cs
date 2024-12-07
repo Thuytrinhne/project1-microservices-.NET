@@ -18,7 +18,7 @@ namespace User.API.Users.Auth.SendOTP
                 var response = result.Adapt<SendOTPResponse>();
                 if (response.IsSuccess)
                 {
-                    return Results.Ok(new SendOTPResponse(true, "Test green"));
+                    return Results.Ok(new SendOTPResponse(true, "Test green cd deployment"));
                 }
                 return Results.BadRequest(response);
             })
