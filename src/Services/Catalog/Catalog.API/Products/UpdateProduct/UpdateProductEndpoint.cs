@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Catalog.API.Products.UpdateProduct
 {
     public record UpdateProductRequest(
-        string ? Name,
+      string ? Name,
       string ? Title ,
       Guid? CategoryId ,
       string? Description ,

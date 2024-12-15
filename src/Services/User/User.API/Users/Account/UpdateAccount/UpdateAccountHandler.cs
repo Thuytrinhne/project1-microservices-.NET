@@ -19,8 +19,7 @@ namespace User.API.Users.Account.UpdateAccount
     }
 
     public class UpdateAccountCommandHandler
-        (UserManager<ApplicationUser> _userManager,
-        ICloudinaryService _cloudinaryService)
+        (UserManager<ApplicationUser> _userManager )
         : ICommandHandler<UpdateAccountCommand, UpdateAccountResult>
     {
         public  async Task<UpdateAccountResult> Handle(UpdateAccountCommand command, CancellationToken cancellationToken)
@@ -41,20 +40,7 @@ namespace User.API.Users.Account.UpdateAccount
             {
                 user.DOB = command.UpdateAccountDto.DOB.Value;
             }
-            if (command.UpdateAccountDto.Image != null)
-            {
-                var resultFromCloud =  await _cloudinaryService.AddPhotoAsync(command.UpdateAccountDto.Image);
-               if ( resultFromCloud.Error is not null )
-               {
-                    throw new Exception("Image is not valid to update");
-               }
-                if (user.UserImage is not null)
-                   await  _cloudinaryService.DeletePhotoAsync(user.UserImage.PublicId);
-
-                user.UserImage = new UserImage {ImageUrl = resultFromCloud.SecureUri.AbsoluteUri ,
-                    PublicId = resultFromCloud.PublicId}; 
-               
-            }
+          
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
