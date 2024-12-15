@@ -1,6 +1,7 @@
 
 using BuildingBlocks.Pagination;
 using Ordering.Application.Orders.Queries.GetOrders;
+using Ordering.Domain.ValueObjects;
 
 namespace Ordering.API.Endpoints
 {
@@ -14,9 +15,10 @@ namespace Ordering.API.Endpoints
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/orders/", async ([AsParameters]PaginationRequest request,  ISender sender, int? StatusOrder = -1) =>
+            app.MapGet("/orders/", async ([AsParameters]PaginationRequest request,  ISender sender, Guid ? CustomerId ,int ? StatusOrder = -1) =>
             {
-                var result = await  sender.Send(new GetOrdersQuery(request,  StatusOrder.Value));
+                var customerId = CustomerId ?? Guid.Empty;
+                var result = await  sender.Send(new GetOrdersQuery(request,  StatusOrder.Value, customerId));
                 var response = result.Adapt<GetOrdersResponse>();
                 return Results.Ok(response);
             })

@@ -1,4 +1,6 @@
 using BuildingBlocks.Pagination;
+using Ordering.Application.Dtos;
+using Ordering.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +20,14 @@ namespace Ordering.Application.Orders.Queries.GetOrders
             var pageSize = query.PaginationRequest.PageSize;
             var totalCount = await dbContext.Orders.LongCountAsync(cancellationToken);
             List<Order> orders = new();
+            var customerId = CustomerId.Of(query.CustomerId);
+
             if (query.StatusOrder != -1)
             {
                  orders = await dbContext.Orders
                                     .Include(o => o.OrderItems)
-                                    .Where(o => o.Status == (OrderStatus)query.StatusOrder)
+                                    .Where(o => o.Status == (OrderStatus)query.StatusOrder && 
+                                                (query.CustomerId == Guid.Empty || o.CustomerId == customerId))
                                     .OrderByDescending(o => o.CreatedAt)
                                     .Skip(pageSize * pageIndex)
                                     .Take(pageSize)
@@ -31,7 +36,8 @@ namespace Ordering.Application.Orders.Queries.GetOrders
             else
             {
                  orders = await dbContext.Orders
-                                   .Include(o => o.OrderItems)                                 
+                .Include(o => o.OrderItems)
+                                   .Where(o => query.CustomerId == Guid.Empty || o.CustomerId == customerId)
                                    .OrderByDescending(o => o.CreatedAt)
                                    .Skip(pageSize * pageIndex)
                                    .Take(pageSize)
