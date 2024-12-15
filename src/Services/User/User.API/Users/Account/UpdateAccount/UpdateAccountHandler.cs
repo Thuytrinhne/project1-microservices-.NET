@@ -32,11 +32,11 @@ namespace User.API.Users.Account.UpdateAccount
             if (!string.IsNullOrEmpty(command.UpdateAccountDto.Name)){
                 user.Name = command.UpdateAccountDto.Name;
             }
-            if (command.UpdateAccountDto.Gender.HasValue)
+            if (command.UpdateAccountDto.Gender.HasValue && command.UpdateAccountDto.Gender != 0 )
             {
                 user.Gender = command.UpdateAccountDto.Gender.Value;  
             }
-            if (command.UpdateAccountDto.DOB.HasValue)
+            if (command.UpdateAccountDto.DOB.HasValue && command.UpdateAccountDto.DOB.Value != DateTime.MinValue)
             {
                 user.DOB = command.UpdateAccountDto.DOB.Value;
             }
