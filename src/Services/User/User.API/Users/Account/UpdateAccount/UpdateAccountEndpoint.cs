@@ -14,10 +14,14 @@ namespace User.API.Users.Account.UpdateAccount
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-           app.MapPatch("/users/{id}", async (UpdateAccountRequest request, Guid id, ISender sender) =>
+           app.MapPatch("/users/{id}", async ([FromBody]UpdateAccountRequest request, Guid id, ISender sender) =>
            {
                var updateAccountDTO = new UpdateAccountDto
-               { Name = request.Name, Gender= request.Gender.Value, DOB = request.DOB.Value}; 
+               {
+                   Name = request.Name, 
+                   Gender = request.Gender.HasValue ? request.Gender.Value : (int?)null, 
+                   DOB = request.DOB.HasValue ? request.DOB.Value : (DateTime?)null
+               };
                var command = new UpdateAccountCommand(id, updateAccountDTO);
                var result = await sender.Send(command);
                var response = result.Adapt<UpdateAccountResponse>();
